@@ -13,12 +13,28 @@
 
 ### 🏠 [Homepage](https://github.com/jefftriplett/pinboard-bookmarks-updater)
 
-### ✨ [Demo](https://github.com/jefftriplett/pinboard-bookmarks-updater)
-
 ## Usage
 
+If you are running locally, you'll need to define a few environment variables: 
+
+- `GITHUB_TOKEN`
+- `GITHUB_USERNAME`
+- `PINBOARD_TOKEN`
+
+### Find duplicates
+
 ```sh
-python main.py
+$ python main.py remove_dupes
+```
+### Fix common tag issues
+```sh
+$ python main.py fix_tags
+```
+
+### Apply Titlecase to your links
+
+```sh
+$ python main.py fix_titlecase
 ```
 
 ## Author
