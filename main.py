@@ -1,4 +1,3 @@
-# import click
 import pinboard
 import requests
 import typer
