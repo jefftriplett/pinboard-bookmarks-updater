@@ -1,0 +1,20 @@
+bs4
+envparse
+flask
+pathlib
+pinboard
+python-slugify
+pyyaml
+requests
+stop-words
+titlecase
+typer
+unidecode
+yarl
+zappa
+
+# dataset
+# ipdb
+# ipython
+# python-frontmatter
+# pyemojify
