@@ -18,7 +18,9 @@ GITHUB_TOKEN = env.str("GITHUB_TOKEN")
 GITHUB_USERNAME = env.str("GITHUB_USERNAME")
 PINBOARD_TOKEN = env.str("PINBOARD_TOKEN")
 
-IGNORE_WORDS = set([word.lower() for word in Path("IGNORE_WORDS.txt").read_text().split()])
+IGNORE_WORDS = set(
+    [word.lower() for word in Path("IGNORE_WORDS.txt").read_text().split()]
+)
 
 STOP_WORDS = set([word.lower() for word in Path("STOP_WORDS.txt").read_text().split()])
 STOP_WORDS.update(set(safe_get_stop_words("english")))
@@ -338,12 +340,6 @@ class Bookmarks(object):
                 )
 
                 typer.echo("---")
-
-
-# Common options
-
-# start_option = typer.option("--start", default=0)
-# count_option = typer.option("--count", default=10)
 
 
 # CLI api
