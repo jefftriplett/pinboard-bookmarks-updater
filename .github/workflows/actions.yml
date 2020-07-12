@@ -10,7 +10,7 @@ on:
   - cron:  '*/15 * * * *'
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
 
     env:
