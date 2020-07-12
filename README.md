@@ -1,7 +1,7 @@
-<h1 align="center">Welcome to pinboard-bot 👋</h1>
+<h1 align="center">Welcome to pinboard-bookmarks-updater 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/jefftriplett/pinboard-bot" target="_blank">
+  <a href="https://github.com/jefftriplett/pinboard-bookmarks-updater" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://twitter.com/webology" target="_blank">
@@ -11,9 +11,9 @@
 
 > Pinboard Bot
 
-### 🏠 [Homepage](https://github.com/jefftriplett/pinboard-bot)
+### 🏠 [Homepage](https://github.com/jefftriplett/pinboard-bookmarks-updater)
 
-### ✨ [Demo](https://github.com/jefftriplett/pinboard-bot)
+### ✨ [Demo](https://github.com/jefftriplett/pinboard-bookmarks-updater)
 
 ## Usage
 
