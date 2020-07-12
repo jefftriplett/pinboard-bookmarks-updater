@@ -1,0 +1,55 @@
+name: Update Bookmarks
+
+on:
+  push:
+    branches:
+      - master
+
+  schedule:
+  # every 15 minutes - https://crontab.guru/#*/15_*_*_*_*
+  - cron:  '*/15 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+      PINBOARD_TOKEN: ${{ secrets.PINBOARD_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.7"
+          architecture: "x64"
+
+      - name: Cache pip
+        id: cache-pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install our project requirements
+        if: steps.cache-pip.outputs.cache-hit != 'true'
+        run: |
+          pip install -U pip
+          python -m pip install -r requirements.txt
+
+      - name: Remove Duplicate Bookmarks
+        run: |
+          python main.py remove_dupes
+
+      - name: Fix Bookmark Tags
+        run: |
+          python main.py fix_tags
+
+      # - name: Fix Titlecase
+      #   run: |
+      #     python main.py fix_titlecase
