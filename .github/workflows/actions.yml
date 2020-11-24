@@ -6,8 +6,8 @@ on:
       - master
 
   schedule:
-  # every 15 minutes - https://crontab.guru/#*/15_*_*_*_*
-  - cron:  '*/15 * * * *'
+    # every 15 minutes - https://crontab.guru/#*/15_*_*_*_*
+    - cron:  '*/15 * * * *'
 
 jobs:
   sync:
