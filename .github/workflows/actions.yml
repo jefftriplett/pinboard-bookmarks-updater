@@ -3,10 +3,10 @@ name: Update Bookmarks
 on:
   push:
     branches:
-      - master
+      - main
 
   schedule:
-    # every 15 minutes - https://crontab.guru/#*/15_*_*_*_*
+    # every 30 minutes - https://crontab.guru/#*/30_*_*_*_*
     - cron:  '*/30 * * * *'
 
 jobs:
