@@ -14,16 +14,20 @@ charset-normalizer==2.0.6
     # via requests
 click==8.0.1
     # via typer
-envparse==0.2.0
+environs==9.3.3
     # via -r requirements.in
 idna==3.2
     # via
     #   requests
     #   yarl
+marshmallow==3.13.0
+    # via environs
 multidict==5.1.0
     # via yarl
 pinboard==2.1.8
     # via -r requirements.in
+python-dotenv==0.19.0
+    # via environs
 python-slugify==5.0.2
     # via -r requirements.in
 requests==2.26.0

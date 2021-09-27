@@ -3,7 +3,7 @@ import requests
 import typer
 
 from bs4 import BeautifulSoup
-from envparse import Env
+from environs import Env
 from pathlib import Path
 from stop_words import safe_get_stop_words
 from titlecase import titlecase
@@ -11,7 +11,7 @@ from unidecode import unidecode
 from yarl import URL
 
 
-env = Env(GITHUB_USERNAME=str, GITHUB_TOKEN=str, PINBOARD_TOKEN=str)
+env = Env()
 
 GITHUB_TOKEN = env.str("GITHUB_TOKEN")
 GITHUB_USERNAME = env.str("GITHUB_USERNAME")
@@ -163,7 +163,7 @@ class Bookmarks(object):
                 else:
                     github_tags = set([])
 
-                if len(description.split(" ")) == 1 and url.host is not "github.com":
+                if len(description.split(" ")) == 1 and url.host != "github.com":
                     typer.secho("description is blank", fg="red")
                     try:
                         doc = requests.get(link.url, timeout=1.0)
