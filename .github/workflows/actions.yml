@@ -6,8 +6,8 @@ on:
       - main
 
   schedule:
-    # every 30 minutes - https://crontab.guru/#*/30_*_*_*_*
-    - cron:  '*/30 * * * *'
+    # every 60 minutes - https://crontab.guru/#*_0_*_*_*
+    - cron:  '* 0 * * *'
 
 jobs:
   sync:
