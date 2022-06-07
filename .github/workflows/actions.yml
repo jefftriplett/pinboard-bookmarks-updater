@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           cache: "pip"
           python-version: "3.9"
