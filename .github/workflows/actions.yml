@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           cache: "pip"
-          python-version: "3.7"
+          python-version: "3.9"
 
       - name: Install our project requirements
         run: |
