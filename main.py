@@ -5,6 +5,7 @@ import typer
 from bs4 import BeautifulSoup
 from environs import Env
 from pathlib import Path
+from rich import print
 from stop_words import safe_get_stop_words
 from titlecase import titlecase
 from unidecode import unidecode
@@ -72,11 +73,12 @@ def normalize_tags(original_tags, ignore_meta_tags=False):
 
 
 class Bookmarks(object):
-    def __init__(self, pinboard_token, start=0, count=20):
+    def __init__(self, *, pinboard_token, count=20, start=0, verbose: bool = False):
         self.pinboard_token = pinboard_token
-        self.pinboard = pinboard.Pinboard(pinboard_token)
         self.count = count
+        self.pinboard = pinboard.Pinboard(pinboard_token)
         self.start = start
+        self.verbose = verbose
 
     """
     TODO:
@@ -164,7 +166,8 @@ class Bookmarks(object):
                     github_tags = set([])
 
                 if len(description.split(" ")) == 1 and url.host != "github.com":
-                    typer.secho("description is blank", fg="red")
+                    if self.verbose:
+                        print("[red]description is blank[/red]")
                     try:
                         doc = requests.get(link.url, timeout=1.0)
                         soup = BeautifulSoup(doc.text, "html.parser")
@@ -173,10 +176,12 @@ class Bookmarks(object):
                         dirty = True
 
                     except (Exception, requests.exceptions.Timeout) as e:
-                        typer.secho(e, fg="red")
+                        if self.verbose:
+                            print(f"[red]{e}[/red]")
 
                 if len(link.extended) == 0:
-                    typer.secho("extended is blank", fg="red")
+                    if self.verbose:
+                        print("[red]extended is blank[/red]")
                     try:
                         doc = requests.get(link.url, timeout=1.0)
                         soup = BeautifulSoup(doc.text, "html.parser")
@@ -205,7 +210,8 @@ class Bookmarks(object):
                                 dirty = True
 
                         except AttributeError as e:
-                            print(e)
+                            if self.verbose:
+                                print(e)
                             # try:
                             #     content = soup.find('meta', {'property': 'og:description'}).get('content')
                             #     link.extended = f'> {content}'
@@ -216,7 +222,8 @@ class Bookmarks(object):
                             pass
 
                     except (Exception, requests.exceptions.Timeout) as e:
-                        typer.secho(e, fg="red")
+                        if self.verbose:
+                            print(f"[red]{e}[/red]")
 
                     # link.extended = titlecase_description
                     # dirty = True
@@ -232,12 +239,15 @@ class Bookmarks(object):
                 new_tags = list(tags | popular | recommended | github_tags)
 
                 if len(new_tags) != len(tags) or dirty:
-                    typer.echo("saving... {}".format(link.url))
-                    typer.echo("description: {}".format(titlecase_description))
-                    if extended:
-                        typer.echo("extended: {}".format(extended))
-                    typer.echo("my tags: {}".format(tags))
-                    typer.echo("updating to: {}".format(new_tags))
+                    if self.verbose:
+                        typer.echo("saving... {}".format(link.url))
+                        typer.echo("description: {}".format(titlecase_description))
+
+                        if extended:
+                            typer.echo("extended: {}".format(extended))
+
+                        typer.echo("my tags: {}".format(tags))
+                        typer.echo("updating to: {}".format(new_tags))
 
                     try:
                         link.tags = new_tags
@@ -249,22 +259,25 @@ class Bookmarks(object):
                             link.extended = extended
                             link.save()
                         except Exception as e:
+                            if self.verbose:
+                                typer.echo("=" * 100)
+                                typer.echo(e)
+                                typer.echo(type(e))
+                                typer.echo("=" * 100)
+
+                    except Exception as e:
+                        if self.verbose:
                             typer.echo("=" * 100)
                             typer.echo(e)
                             typer.echo(type(e))
                             typer.echo("=" * 100)
 
-                    except Exception as e:
-                        typer.echo("=" * 100)
-                        typer.echo(e)
-                        typer.echo(type(e))
-                        typer.echo("=" * 100)
-
             except Exception as e:
-                typer.echo("=" * 100)
-                typer.echo(e)
-                typer.echo(type(e))
-                typer.echo("=" * 100)
+                if self.verbose:
+                    typer.echo("=" * 100)
+                    typer.echo(e)
+                    typer.echo(type(e))
+                    typer.echo("=" * 100)
 
     def fix_titlecase(self, start=None, count=None):
 
@@ -289,21 +302,25 @@ class Bookmarks(object):
                         link.extended = extended
                         link.save()
                     except UnicodeEncodeError:
-                        typer.echo("*" * 60)
-                        typer.echo(
-                            "description: {}".format(unidecode(link.description))
-                        )
-                        typer.echo("extended: {}".format(unidecode(link.extended)))
-                        typer.echo("url: {}".format(link.url))
-                        typer.echo("tags: {}".format(set(normalize_tags(link.tags))))
-                        typer.echo("*" * 60)
+                        if self.verbose:
+                            typer.echo("*" * 60)
+                            typer.echo(
+                                "description: {}".format(unidecode(link.description))
+                            )
+                            typer.echo("extended: {}".format(unidecode(link.extended)))
+                            typer.echo("url: {}".format(link.url))
+                            typer.echo(
+                                "tags: {}".format(set(normalize_tags(link.tags)))
+                            )
+                            typer.echo("*" * 60)
 
                 except Exception as e:
-                    typer.echo("=" * 100)
-                    typer.echo(e)
-                    typer.echo(type(e))
-                    typer.echo(link.url)
-                    typer.echo("=" * 100)
+                    if self.verbose:
+                        typer.echo("=" * 100)
+                        typer.echo(e)
+                        typer.echo(type(e))
+                        typer.echo(link.url)
+                        typer.echo("=" * 100)
 
     def remove_dupes(self, start=None, count=None):
 
@@ -317,11 +334,12 @@ class Bookmarks(object):
             tag = tags[0] if len(tags) else ""
 
             if tag.startswith(("http", "https")) and tag not in ["http", "https"]:
-                typer.echo("description: {}".format(unidecode(link.description)))
-                typer.echo("extended: {}".format(unidecode(link.extended)))
-                typer.echo("url: {}".format(link.url))
-                typer.echo("tags: {}".format(tags))
-                typer.echo("tag: {}".format(tag))
+                if self.verbose:
+                    typer.echo("description: {}".format(unidecode(link.description)))
+                    typer.echo("extended: {}".format(unidecode(link.extended)))
+                    typer.echo("url: {}".format(link.url))
+                    typer.echo("tags: {}".format(tags))
+                    typer.echo("tag: {}".format(tag))
 
                 if tag.startswith("http://xn--%20https:-dk9c//"):
                     tag = tag.replace("http://xn--%20https:-dk9c//", "https://")
@@ -338,7 +356,8 @@ class Bookmarks(object):
                     url=new_url, description=unidecode(new_description), private=True
                 )
 
-                typer.echo("---")
+                if self.verbose:
+                    typer.echo("---")
 
 
 # CLI api
@@ -346,26 +365,26 @@ app = typer.Typer()
 
 
 @app.command("fix_tags")
-def fix_tags(start: int = 0, count: int = 10):
-    typer.secho("fix_tags()...", fg="green")
+def fix_tags(count: int = 10, start: int = 0, verbose: bool = False):
+    print("[green]fix_tags()...[/green]")
 
-    bookmarks = Bookmarks(PINBOARD_TOKEN)
+    bookmarks = Bookmarks(pinboard_token=PINBOARD_TOKEN)
     bookmarks.fix_tags(start, count)
 
 
 @app.command("fix_titlecase")
-def fix_titlecase(start: int = 0, count: int = 10):
-    typer.secho("fix_titlecase()...", fg="green")
+def fix_titlecase(count: int = 10, start: int = 0, verbose: bool = False):
+    print("[green]fix_titlecase()...[/green]")
 
-    bookmarks = Bookmarks(PINBOARD_TOKEN)
+    bookmarks = Bookmarks(pinboard_token=PINBOARD_TOKEN)
     bookmarks.fix_titlecase(start, count)
 
 
 @app.command("remove_dupes")
-def remove_dupes(start: int = 0, count: int = 10):
-    typer.secho("remove_dupes()...", fg="green")
+def remove_dupes(count: int = 10, start: int = 0, verbose: bool = False):
+    print("[green]remove_dupes()...[/green]")
 
-    bookmarks = Bookmarks(PINBOARD_TOKEN)
+    bookmarks = Bookmarks(pinboard_token=PINBOARD_TOKEN)
     bookmarks.remove_dupes(start, count)
 
 
