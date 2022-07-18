@@ -6,8 +6,8 @@ on:
       - main
 
   schedule:
-    # every 60 minutes - https://crontab.guru/#*_0_*_*_*
-    - cron:  '* 0 * * *'
+    # At minute 0 past every hour - https://crontab.guru/#0_*/1_*_*_*
+    - cron:  '0 */1 * * *'
 
 concurrency: 
   group: ${{ github.ref }}
