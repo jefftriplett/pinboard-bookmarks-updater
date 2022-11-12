@@ -43,7 +43,8 @@ $ python main.py fix_titlecase
 
 * Website: https://jefftriplett.com
 * Twitter: [@webology](https://twitter.com/webology)
-* Github: [@jefftriplett](https://github.com/jefftriplett)
+* Mastodon: [@webology](https://mastodon.social/@webology)
+* GitHub: [@jefftriplett](https://github.com/jefftriplett)
 
 ## Show your support
 
