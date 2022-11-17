@@ -39,16 +39,23 @@ $ python main.py fix_titlecase
 
 ## Author
 
+<!-- [[[cog
+import cog
+import requests
+response = requests.get("https://raw.githubusercontent.com/jefftriplett/actions/main/footer.txt")
+response.raise_for_status()
+print(response.text.strip())
+]]] -->
+## Author
+
 👤 **Jeff Triplett**
 
 * Website: https://jefftriplett.com
-* Twitter: [@webology](https://twitter.com/webology)
 * Mastodon: [@webology](https://mastodon.social/@webology)
+* Twitter: [@webology](https://twitter.com/webology)
 * GitHub: [@jefftriplett](https://github.com/jefftriplett)
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+<!-- [[[end]]] -->
